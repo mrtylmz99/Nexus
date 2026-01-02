@@ -1,17 +1,22 @@
+using System.ComponentModel.DataAnnotations;
 using Nexus.Domain.Common;
+using Nexus.Domain.Enums;
+using TaskStatus = Nexus.Domain.Enums.TaskStatus; // Fix ambiguity with System.Threading.Tasks.TaskStatus
 
 namespace Nexus.Domain.Entities;
 
 public class TaskItem : BaseEntity
 {
+    [Required]
+    [MaxLength(200)]
     public string Title { get; set; } = string.Empty;
-    public string Description { get; set; } = string.Empty;
-    
-    // Priority: 0=Low, 1=Medium, 2=High
-    public int Priority { get; set; }
 
-    // Status: 0=Todo, 1=In Progress, 2=Done
-    public int Status { get; set; }
+    public string Description { get; set; } = string.Empty;
+
+    // Enum kullanımı: Veritabanında int olarak tutulur ama kodda okunabilirlik sağlar.
+    public TaskPriority Priority { get; set; } = TaskPriority.Medium;
+
+    public TaskStatus Status { get; set; } = TaskStatus.Todo;
     
     public DateTime? DueDate { get; set; }
 
