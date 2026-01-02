@@ -11,6 +11,9 @@ public class NexusDbContext : DbContext
 
     public DbSet<Project> Projects { get; set; }
     public DbSet<TaskItem> TaskItems { get; set; }
+    public DbSet<User> Users { get; set; }
+    public DbSet<Category> Categories { get; set; }
+    public DbSet<Comment> Comments { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -33,5 +36,24 @@ public class NexusDbContext : DbContext
             .Property(t => t.Title)
             .IsRequired()
             .HasMaxLength(200);
+
+        // Task - Category Many-to-Many
+        modelBuilder.Entity<TaskItem>()
+            .HasMany(t => t.Categories)
+            .WithMany(c => c.Tasks)
+            .UsingEntity(j => j.ToTable("TaskCategories"));
+            
+        // Comment Config
+        modelBuilder.Entity<Comment>()
+            .HasOne(c => c.Task)
+            .WithMany(t => t.Comments)
+            .HasForeignKey(c => c.TaskId)
+            .OnDelete(DeleteBehavior.Cascade);
+            
+        modelBuilder.Entity<Comment>()
+            .HasOne(c => c.User)
+            .WithMany()
+            .HasForeignKey(c => c.UserId)
+            .OnDelete(DeleteBehavior.NoAction); // Avoid cycles or multiple cascade paths
     }
 }

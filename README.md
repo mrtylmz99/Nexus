@@ -66,7 +66,3 @@ dotnet test
 ## 📝 Logging
 
 All application logs and errors are automatically saved to the `AppLogs` table in the database.
-
----
-
-_Developed with ❤️ by Antigravity_

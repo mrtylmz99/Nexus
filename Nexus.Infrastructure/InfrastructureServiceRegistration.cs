@@ -15,6 +15,9 @@ public static class InfrastructureServiceRegistration
 
         services.AddScoped<IProjectService, ProjectService>();
         services.AddScoped<ITaskService, TaskService>();
+        services.AddScoped<IUserService, UserService>();
+        services.AddScoped<ICategoryService, CategoryService>();
+        services.AddScoped<ICommentService, CommentService>();
 
         return services;
     }

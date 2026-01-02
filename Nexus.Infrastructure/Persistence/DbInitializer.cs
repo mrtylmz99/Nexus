@@ -37,6 +37,23 @@ public static class DbInitializer
         context.Projects.AddRange(projects);
         context.SaveChanges();
 
+        var users = new User[]
+        {
+            new User { Username = "jdoe", FullName = "John Doe", Email = "john@nexus.com", CreatedAt = DateTime.UtcNow },
+            new User { Username = "asmith", FullName = "Alice Smith", Email = "alice@nexus.com", CreatedAt = DateTime.UtcNow }
+        };
+        context.Users.AddRange(users);
+        context.SaveChanges();
+
+        var categories = new Category[]
+        {
+            new Category { Name = "Frontend", ColorCode = "#3B82F6" },
+            new Category { Name = "Backend", ColorCode = "#10B981" },
+            new Category { Name = "Bug", ColorCode = "#EF4444" }
+        };
+        context.Categories.AddRange(categories);
+        context.SaveChanges();
+
         var tasks = new TaskItem[]
         {
             new TaskItem
@@ -46,8 +63,10 @@ public static class DbInitializer
                 Priority = TaskPriority.High,
                 Status = TaskStatus.InProgress,
                 ProjectId = projects[0].Id,
+                AssigneeId = users[1].Id, // Assign to Alice
                 CreatedAt = DateTime.UtcNow,
-                DueDate = DateTime.UtcNow.AddDays(7)
+                DueDate = DateTime.UtcNow.AddDays(7),
+                Categories = new List<Category> { categories[0] }
             },
             new TaskItem
             {
@@ -56,8 +75,10 @@ public static class DbInitializer
                 Priority = TaskPriority.Medium,
                 Status = TaskStatus.Todo,
                 ProjectId = projects[1].Id,
+                AssigneeId = users[0].Id, // Assign to John
                 CreatedAt = DateTime.UtcNow,
-                DueDate = DateTime.UtcNow.AddDays(3)
+                DueDate = DateTime.UtcNow.AddDays(3),
+                Categories = new List<Category> { categories[1] }
             }
         };
 

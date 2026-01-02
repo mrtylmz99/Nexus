@@ -22,4 +22,12 @@ public class TaskItem : BaseEntity
 
     public int ProjectId { get; set; }
     public Project? Project { get; set; }
+
+    // New Relationships
+    public int? AssigneeId { get; set; }
+    public User? Assignee { get; set; }
+
+    public ICollection<Comment> Comments { get; set; } = new List<Comment>();
+    
+    public ICollection<Category> Categories { get; set; } = new List<Category>();
 }
