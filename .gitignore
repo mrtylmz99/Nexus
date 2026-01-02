@@ -1,0 +1,25 @@
+# .NET
+bin/
+obj/
+.vs/
+*.user
+*.suo
+[Dd]ebug/
+[Rr]elease/
+*.pubxml
+
+# Dependency directories
+packages/
+[Nn]ode_modules/
+
+# Angular
+.angular/
+dist/
+.env
+
+# Tool specific
+.vscode/
+.idea/
+*.swp
+*.log
+.gemini/
