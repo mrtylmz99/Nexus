@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Nexus.Infrastructure;
 using Nexus.Infrastructure.Persistence;
 using Serilog;
+using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,8 +23,27 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
+    app.MapScalarApiReference(); // Visual Docs
 }
 
 app.UseHttpsRedirection();
+app.UseAuthorization();
+app.MapControllers();
+
+// Seed Database
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    try
+    {
+        var context = services.GetRequiredService<NexusDbContext>();
+        DbInitializer.Initialize(context);
+    }
+    catch (Exception ex)
+    {
+        var logger = services.GetRequiredService<ILogger<Program>>();
+        logger.LogError(ex, "An error occurred while seeding the database.");
+    }
+}
 
 app.Run();

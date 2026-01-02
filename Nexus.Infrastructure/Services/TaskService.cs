@@ -18,6 +18,7 @@ public class TaskService : ITaskService
     public async Task<List<TaskDto>> GetTasksByProjectIdAsync(int projectId)
     {
         return await _context.TaskItems
+            .AsNoTracking()
             .Where(t => t.ProjectId == projectId)
             .Select(t => new TaskDto
             {

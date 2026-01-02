@@ -19,6 +19,7 @@ public class ProjectService : IProjectService
     public async Task<List<ProjectDto>> GetAllProjectsAsync()
     {
         return await _context.Projects
+            .AsNoTracking()
             .Include(p => p.Tasks)
             .Select(p => new ProjectDto
             {
