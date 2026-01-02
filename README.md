@@ -69,4 +69,3 @@ All application logs and errors are automatically saved to the `AppLogs` table i
 
 ---
 
-_Developed with ❤️ by Antigravity_
