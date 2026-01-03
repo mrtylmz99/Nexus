@@ -25,7 +25,7 @@ public class UserService : IUserService
                 FullName = u.FullName,
                 Role = u.Role.ToString(),
                 ProfilePictureUrl = u.ProfilePictureUrl,
-                IsActive = u.IsActive,
+                Status = u.Status.ToString(),
                 CreatedAt = u.CreatedAt
             })
             .ToListAsync();
@@ -44,7 +44,7 @@ public class UserService : IUserService
             FullName = user.FullName,
             Role = user.Role.ToString(),
             ProfilePictureUrl = user.ProfilePictureUrl,
-            IsActive = user.IsActive,
+            Status = user.Status.ToString(),
             CreatedAt = user.CreatedAt
         };
     }
@@ -54,7 +54,16 @@ public class UserService : IUserService
         var user = await _context.Users.FindAsync(id);
         if (user == null) return false;
 
-        user.IsActive = !user.IsActive;
+        // Simple toggle logic: if Active -> Inactive, else -> Active
+        if (user.Status == Domain.Enums.UserStatus.Active)
+        {
+            user.Status = Domain.Enums.UserStatus.Inactive;
+        }
+        else
+        {
+            user.Status = Domain.Enums.UserStatus.Active;
+        }
+        
         await _context.SaveChangesAsync();
         return true;
     }

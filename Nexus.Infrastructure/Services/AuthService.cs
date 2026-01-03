@@ -17,11 +17,13 @@ public class AuthService : IAuthService
 {
     private readonly NexusDbContext _context;
     private readonly IConfiguration _configuration;
+    private readonly IEmailService _emailService;
 
-    public AuthService(NexusDbContext context, IConfiguration configuration)
+    public AuthService(NexusDbContext context, IConfiguration configuration, IEmailService emailService)
     {
         _context = context;
         _configuration = configuration;
+        _emailService = emailService;
     }
 
     public async Task<AuthResponseDto> LoginAsync(LoginDto loginDto)
@@ -30,10 +32,15 @@ public class AuthService : IAuthService
         var user = await _context.Users
             .FirstOrDefaultAsync(u => u.Email == loginDto.Email);
 
-        // Verify user existence and password hash / Kullanıcı varlığını ve şifre hash'ini doğrula
+        // Verify user existence, password hash, and status / Kullanıcı durumu kontrolü
         if (user == null || !BCrypt.Net.BCrypt.Verify(loginDto.Password, user.PasswordHash))
         {
             throw new Exception("Invalid credentials");
+        }
+
+        if (user.Status != Domain.Enums.UserStatus.Active)
+        {
+            throw new Exception("Account is not active. Please contact support.");
         }
 
         // Generate Token / Token Üret
@@ -71,6 +78,7 @@ public class AuthService : IAuthService
             PasswordHash = passwordHash,
             // Generate default avatar using UI Avatars (initials based)
             ProfilePictureUrl = $"https://ui-avatars.com/api/?name={Uri.EscapeDataString(registerDto.FullName)}&background=random&color=fff",
+            Status = Domain.Enums.UserStatus.Active,
             CreatedAt = DateTime.UtcNow
         };
 
@@ -91,6 +99,55 @@ public class AuthService : IAuthService
                 CreatedAt = user.CreatedAt
             }
         };
+    }
+
+    public async Task ForgotPasswordAsync(string email)
+    {
+        var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
+        if (user == null)
+        {
+            // Security: Don't reveal exact user existence, but for now we just return
+            // Güvenlik: Kullanıcının varlığını belli etme, şimdilik sadece dönüyoruz
+            return;
+        }
+
+        // Generate 6-digit code / 6 haneli kod üret
+        var code = new Random().Next(100000, 999999).ToString();
+        user.ResetCode = code;
+        user.ResetCodeExpires = DateTime.UtcNow.AddMinutes(15); // Valid for 15 mins
+
+        await _context.SaveChangesAsync();
+
+        // Send Email (Mock) / E-posta Gönder (Mock)
+        await _emailService.SendEmailAsync(user.Email, "Nexus Password Reset Code", $"Your verification code is: {code}");
+    }
+
+    public async Task<bool> VerifyResetCodeAsync(string email, string code)
+    {
+        var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
+        if (user == null || user.ResetCode != code || user.ResetCodeExpires < DateTime.UtcNow)
+        {
+            return false;
+        }
+        return true;
+    }
+
+    public async Task ResetPasswordAsync(string email, string code, string newPassword)
+    {
+        var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
+        if (user == null || user.ResetCode != code || user.ResetCodeExpires < DateTime.UtcNow)
+        {
+            throw new Exception("Invalid or expired reset code");
+        }
+
+        // Hash new password / Yeni şifreyi hash'le
+        user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(newPassword);
+        
+        // Clear reset code / Reset kodunu temizle
+        user.ResetCode = null;
+        user.ResetCodeExpires = null;
+
+        await _context.SaveChangesAsync();
     }
 
     private string GenerateJwtToken(User user)
