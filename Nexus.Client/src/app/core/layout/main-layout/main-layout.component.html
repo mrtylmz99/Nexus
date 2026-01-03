@@ -1,0 +1,77 @@
+<div class="min-h-screen bg-slate-50 dark:bg-slate-900 transition-colors duration-300">
+  <!-- Navbar -->
+  <nav
+    class="bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 px-6 py-3 flex items-center justify-between sticky top-0 z-50"
+  >
+    <!-- Logo -->
+    <div class="flex items-center gap-2">
+      <div
+        class="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center text-white font-bold"
+      >
+        N
+      </div>
+      <span
+        class="text-xl font-bold bg-gradient-to-r from-indigo-600 to-violet-600 bg-clip-text text-transparent"
+        >Nexus</span
+      >
+    </div>
+
+    <!-- Right Side Actions -->
+    <div class="flex items-center gap-4">
+      <!-- Language Switcher -->
+      <div class="flex items-center gap-2 mr-2">
+        <button
+          (click)="switchLanguage('tr')"
+          class="px-2 py-1 text-xs font-medium rounded hover:bg-slate-100 dark:hover:bg-slate-700"
+          [class.text-indigo-600]="currentLang() === 'tr'"
+        >
+          TR
+        </button>
+        <div class="h-3 w-px bg-slate-300 dark:bg-slate-600"></div>
+        <button
+          (click)="switchLanguage('en')"
+          class="px-2 py-1 text-xs font-medium rounded hover:bg-slate-100 dark:hover:bg-slate-700"
+          [class.text-indigo-600]="currentLang() === 'en'"
+        >
+          EN
+        </button>
+      </div>
+
+      <!-- Theme Toggle -->
+      <button
+        (click)="toggleTheme()"
+        class="p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-500 dark:text-slate-400"
+      >
+        <lucide-icon [name]="isDarkMode() ? icons.Sun : icons.Moon" [size]="20"></lucide-icon>
+      </button>
+
+      <!-- User Profile -->
+      <div
+        class="relative cursor-pointer flex items-center gap-3 pl-4 border-l border-slate-200 dark:border-slate-700"
+      >
+        <div class="text-right hidden sm:block">
+          <div class="text-sm font-medium text-slate-900 dark:text-white">
+            {{ user()?.fullName }}
+          </div>
+          <div class="text-xs text-slate-500">{{ user()?.role }}</div>
+        </div>
+        <img
+          [src]="user()?.profilePictureUrl"
+          class="w-9 h-9 rounded-full bg-slate-200 border-2 border-white dark:border-slate-800"
+        />
+        <button
+          (click)="logout()"
+          class="ml-2 text-red-500 hover:bg-red-50 p-2 rounded-lg"
+          title="Logout"
+        >
+          <lucide-icon [name]="icons.LogOut" [size]="18"></lucide-icon>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <main class="container mx-auto p-6">
+    <router-outlet></router-outlet>
+  </main>
+</div>
