@@ -19,7 +19,10 @@ public class NexusDbContext : DbContext
     {
         base.OnModelCreating(modelBuilder);
 
-        // Project Config
+        // Apply all configurations from the current assembly (Infrastructure)
+        modelBuilder.ApplyConfigurationsFromAssembly(typeof(NexusDbContext).Assembly);
+
+        // Project Config (Keep existing if not moved to separate config, or better yet, move them later)
         modelBuilder.Entity<Project>()
             .HasMany(p => p.Tasks)
             .WithOne(t => t.Project)

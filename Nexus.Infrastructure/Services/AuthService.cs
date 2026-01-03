@@ -69,6 +69,8 @@ public class AuthService : IAuthService
             Email = registerDto.Email,
             FullName = registerDto.FullName,
             PasswordHash = passwordHash,
+            // Generate default avatar using UI Avatars (initials based)
+            ProfilePictureUrl = $"https://ui-avatars.com/api/?name={Uri.EscapeDataString(registerDto.FullName)}&background=random&color=fff",
             CreatedAt = DateTime.UtcNow
         };
 
