@@ -5,6 +5,7 @@ import { MainLayoutComponent } from './core/layout/main-layout/main-layout';
 import { authGuard } from './core/guards/auth.guard';
 import { adminGuard } from './core/guards/admin.guard';
 import { UserList } from './features/admin/user-list/user-list';
+import { NotFoundComponent } from './core/errors/not-found/not-found';
 
 export const routes: Routes = [
   // Public Routes (Auth)
@@ -33,4 +34,5 @@ export const routes: Routes = [
       { path: '', redirectTo: 'admin/users', pathMatch: 'full' },
     ],
   },
+  { path: '**', component: NotFoundComponent },
 ];
