@@ -33,7 +33,7 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
         builder.Property(u => u.Role)
             .IsRequired();
 
-        builder.Property(u => u.IsActive)
+        builder.Property(u => u.Status)
             .IsRequired();
 
         // Tasks relationship

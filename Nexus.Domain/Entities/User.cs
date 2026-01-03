@@ -17,7 +17,11 @@ public class User : BaseEntity
 
     public string? ProfilePictureUrl { get; set; }
 
-    public bool IsActive { get; set; } = true;
+    public UserStatus Status { get; set; } = UserStatus.Active;
+
+    // Password Reset Properties
+    public string? ResetCode { get; set; }
+    public DateTime? ResetCodeExpires { get; set; }
 
     // Navigation property for assigned tasks
     public ICollection<TaskItem> AssignedTasks { get; set; } = new List<TaskItem>();

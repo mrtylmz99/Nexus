@@ -8,109 +8,85 @@ public static class DbInitializer
 {
     public static void Initialize(NexusDbContext context)
     {
-        context.Database.EnsureCreated();
+        // context.Database.EnsureCreated(); // REMOVED: Using Migrations instead. / Migrations kullanıldığı için kaldırıldı.
 
-        // Look for any users. If exist, DB is already seeded.
-        // Kullanıcı var mı diye bak. Varsa, veritabanı zaten tohumlanmıştır.
-        if (context.Users.Any())
+        // 1. Users are now seeded via Migrations (NexusDbContext.OnModelCreating)
+        // Kullanıcılar artık Migration ile ekleniyor.
+
+        // 2. Seed Categories (if none exist)
+        if (!context.Categories.Any())
         {
-            return;
+            var categories = new Category[]
+            {
+                new Category { Name = "Frontend", ColorCode = "#3B82F6", CreatedAt = DateTime.UtcNow },
+                new Category { Name = "Backend", ColorCode = "#10B981", CreatedAt = DateTime.UtcNow },
+                new Category { Name = "Bug", ColorCode = "#EF4444", CreatedAt = DateTime.UtcNow }
+            };
+            context.Categories.AddRange(categories);
+            context.SaveChanges();
         }
 
-        // 1. Seed Users (with Hashed Passwords) / Kullanıcıları Ekle (Hash'lenmiş şifrelerle)
-        // Note: In a real app, use a service or config for the salt/work factor.
-        // Not: Gerçek bir uygulamada salt/work factor için bir servis veya yapılandırma kullanın.
-        var users = new User[]
+        // 3. Seed Projects (if none exist)
+        if (!context.Projects.Any())
         {
-            new User 
-            { 
-                Username = "admin", 
-                FullName = "System Administrator", 
-                Email = "admin@nexus.com", 
-                PasswordHash = BCrypt.Net.BCrypt.HashPassword("Admin123!"),
-                Role = UserRole.Admin,
-                CreatedAt = DateTime.UtcNow 
-            },
-            new User 
-            { 
-                Username = "jdoe", 
-                FullName = "John Doe", 
-                Email = "john@nexus.com", 
-                PasswordHash = BCrypt.Net.BCrypt.HashPassword("Password123!"),
-                Role = UserRole.User,
-                CreatedAt = DateTime.UtcNow 
-            },
-            new User 
-            { 
-                Username = "asmith", 
-                FullName = "Alice Smith", 
-                Email = "alice@nexus.com", 
-                PasswordHash = BCrypt.Net.BCrypt.HashPassword("Password123!"),
-                Role = UserRole.Manager,
-                CreatedAt = DateTime.UtcNow 
-            }
-        };
-        context.Users.AddRange(users);
-        context.SaveChanges();
+            var projects = new Project[]
+            {
+                new Project { Name = "Project Alpha", Description = "The first project", Status = 0, CreatedAt = DateTime.UtcNow },
+                new Project { Name = "Project Beta", Description = "Second project", Status = 0, CreatedAt = DateTime.UtcNow }
+            };
+            context.Projects.AddRange(projects);
+            context.SaveChanges();
+        }
 
-        // 2. Seed Categories
-        var categories = new Category[]
+        // 4. Seed Tasks (if none exist AND users/projects exist for linking)
+        if (!context.TaskItems.Any() && context.Users.Any() && context.Projects.Any() && context.Categories.Any())
         {
-            new Category { Name = "Frontend", ColorCode = "#3B82F6", CreatedAt = DateTime.UtcNow },
-            new Category { Name = "Backend", ColorCode = "#10B981", CreatedAt = DateTime.UtcNow },
-            new Category { Name = "Bug", ColorCode = "#EF4444", CreatedAt = DateTime.UtcNow }
-        };
-        context.Categories.AddRange(categories);
-        context.SaveChanges();
+            // Re-fetch required entities to ensure valid IDs
+            var adminUser = context.Users.FirstOrDefault(u => u.Email == "admin@nexus.com") ?? context.Users.First();
+            var normalUser = context.Users.FirstOrDefault(u => u.Email == "john@nexus.com") ?? context.Users.First();
+            var projectAlpha = context.Projects.First(p => p.Name == "Project Alpha");
+            var projectBeta = context.Projects.First(p => p.Name == "Project Beta");
+            var catFrontend = context.Categories.First(c => c.Name == "Frontend");
+            var catBackend = context.Categories.First(c => c.Name == "Backend");
 
-        // 3. Seed Projects
-        var projects = new Project[]
-        {
-            new Project { Name = "Project Alpha", Description = "The first project", Status = 0, CreatedAt = DateTime.UtcNow },
-            new Project { Name = "Project Beta", Description = "Second project", Status = 0, CreatedAt = DateTime.UtcNow }
-        };
-        context.Projects.AddRange(projects);
-        context.SaveChanges();
-
-        // 4. Seed Tasks
-        var tasks = new TaskItem[]
-        {
-            new TaskItem 
-            { 
-                Title = "Initial Setup", 
-                Description = "Setup the project structure", 
-                Priority = TaskPriority.High, 
-                Status = TaskStatus.Completed, 
-                ProjectId = projects[0].Id,
-                AssigneeId = users[0].Id,
-                CreatedAt = DateTime.UtcNow,
-                Categories = new List<Category> { categories[1] } 
-            },
-            new TaskItem 
-            { 
-                Title = "Database Design", 
-                Description = "Design the schema", 
-                Priority = TaskPriority.Medium, 
-                Status = TaskStatus.InProgress, 
-                ProjectId = projects[0].Id,
-                AssigneeId = users[1].Id,
-                CreatedAt = DateTime.UtcNow,
-                Categories = new List<Category> { categories[1] }
-            },
-            new TaskItem 
-            { 
-                Title = "Frontend Init", 
-                Description = "Initialize Angular", 
-                Priority = TaskPriority.Low, 
-                Status = TaskStatus.Todo, 
-                ProjectId = projects[1].Id,
-                AssigneeId = users[0].Id,
-                CreatedAt = DateTime.UtcNow,
-                Categories = new List<Category> { categories[0] }
-            }
-        };
-
-        context.TaskItems.AddRange(tasks);
-        context.SaveChanges();
+            var tasks = new TaskItem[]
+            {
+                new TaskItem 
+                { 
+                    Title = "Initial Setup", 
+                    Description = "Setup the project structure", 
+                    Priority = TaskPriority.High, 
+                    Status = TaskStatus.Completed, 
+                    ProjectId = projectAlpha.Id,
+                    AssigneeId = adminUser.Id,
+                    CreatedAt = DateTime.UtcNow,
+                    Categories = new List<Category> { catBackend } 
+                },
+                new TaskItem 
+                { 
+                    Title = "Database Design", 
+                    Description = "Design the schema", 
+                    Priority = TaskPriority.Medium, 
+                    Status = TaskStatus.InProgress, 
+                    ProjectId = projectAlpha.Id,
+                    AssigneeId = normalUser.Id,
+                    CreatedAt = DateTime.UtcNow,
+                    Categories = new List<Category> { catBackend }
+                },
+                new TaskItem 
+                { 
+                    Title = "Frontend Init", 
+                    Description = "Initialize Angular", 
+                    Priority = TaskPriority.Low, 
+                    Status = TaskStatus.Todo, 
+                    ProjectId = projectBeta.Id,
+                    AssigneeId = adminUser.Id,
+                    CreatedAt = DateTime.UtcNow,
+                    Categories = new List<Category> { catFrontend }
+                }
+            };
+            context.TaskItems.AddRange(tasks);
+            context.SaveChanges();
+        }
     }
 }

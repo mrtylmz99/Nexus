@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Nexus.Infrastructure.Persistence;
 
@@ -11,9 +12,11 @@ using Nexus.Infrastructure.Persistence;
 namespace Nexus.Infrastructure.Migrations
 {
     [DbContext(typeof(NexusDbContext))]
-    partial class NexusDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260103161349_AddResetCodeToUser")]
+    partial class AddResetCodeToUser
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -233,41 +236,6 @@ namespace Nexus.Infrastructure.Migrations
                         .IsUnique();
 
                     b.ToTable("Users", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            CreatedAt = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Email = "admin@nexus.com",
-                            FullName = "System Administrator",
-                            IsActive = true,
-                            PasswordHash = "$2a$11$FKX1W0VBTO5t.Z01QOsNWePbSsEQttXNrfsoG3k4WHSRdphlHc9SO",
-                            Role = 2,
-                            Username = "admin"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            CreatedAt = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Email = "john@nexus.com",
-                            FullName = "John Doe",
-                            IsActive = true,
-                            PasswordHash = "$2a$11$ksou699iZPqNAAjTI8MfeOuaCI/l4DP2ci5p.Fb54MfLaVe/FUkYG",
-                            Role = 0,
-                            Username = "jdoe"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            CreatedAt = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Email = "alice@nexus.com",
-                            FullName = "Alice Smith",
-                            IsActive = true,
-                            PasswordHash = "$2a$11$3689O5gFXRxx3nCYFWwJz.UMPjhSjQmJfYuoHAbHhvNlrxlQNE/p.",
-                            Role = 1,
-                            Username = "asmith"
-                        });
                 });
 
             modelBuilder.Entity("CategoryTaskItem", b =>
