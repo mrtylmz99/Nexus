@@ -3,8 +3,10 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Nexus.Infrastructure;
 using Nexus.Infrastructure.Persistence;
+using Nexus.Application;
 using Serilog;
 using Scalar.AspNetCore;
+using FluentValidation.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,6 +17,17 @@ builder.Host.UseSerilog((context, configuration) =>
 // Add services to the container.
 builder.Services.AddOpenApi();
 builder.Services.AddControllers(); // Add Controllers
+
+// CORS Configuration
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAngularApp",
+        builder => builder
+            .WithOrigins("http://localhost:4200")
+            .AllowAnyMethod()
+            .AllowAnyHeader()
+            .AllowCredentials());
+});
 
 // JWT Authentication Configuration / JWT Kimlik Doğrulama Yapılandırması
 var jwtSettings = builder.Configuration.GetSection("JwtSettings");
@@ -40,7 +53,13 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
-// Clean Architecture: Infrastructure Services Registration
+// Clean Architecture: Application Services Registration
+builder.Services.AddApplicationServices();
+
+// Clean Architecture: Include FluentValidation AutoValidation
+builder.Services.AddFluentValidationAutoValidation();
+
+// Clean Architecture: Algorithm Services Registration
 // Temiz Mimari: Altyapı Servislerinin Kaydı
 builder.Services.AddInfrastructureServices(builder.Configuration.GetConnectionString("DefaultConnection")!);
 
@@ -66,6 +85,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseCors("AllowAngularApp"); // Enable CORS
 app.UseAuthentication(); // Enable Auth
 app.UseAuthorization();
 app.MapControllers();

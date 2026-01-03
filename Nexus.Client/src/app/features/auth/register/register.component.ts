@@ -3,7 +3,16 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { AuthService, RegisterDto } from '../../../core/services/auth.service';
-import { LucideAngularModule, UserPlus, Mail, Lock, User } from 'lucide-angular';
+import {
+  LucideAngularModule,
+  UserPlus,
+  Mail,
+  Lock,
+  User,
+  Eye,
+  EyeOff,
+  Wand2,
+} from 'lucide-angular';
 
 @Component({
   selector: 'app-register',
@@ -99,12 +108,33 @@ import { LucideAngularModule, UserPlus, Mail, Lock, User } from 'lucide-angular'
               <input
                 id="password"
                 name="password"
-                type="password"
+                [type]="showPassword() ? 'text' : 'password'"
                 [(ngModel)]="formData.password"
                 required
-                class="block w-full pl-10 pr-3 py-3 border border-slate-300 dark:border-slate-700 rounded-xl bg-white dark:bg-slate-900 text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 sm:text-sm transition-all"
+                class="block w-full pl-10 pr-20 py-3 border border-slate-300 dark:border-slate-700 rounded-xl bg-white dark:bg-slate-900 text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 sm:text-sm transition-all"
                 placeholder="Password"
               />
+              <div class="absolute inset-y-0 right-0 flex items-center pr-3 space-x-2">
+                <button
+                  type="button"
+                  (click)="togglePasswordVisibility()"
+                  class="p-1 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 transition-colors focus:outline-none"
+                  title="Show/Hide Password"
+                >
+                  <lucide-icon
+                    [img]="showPassword() ? icons.EyeOff : icons.Eye"
+                    class="h-5 w-5"
+                  ></lucide-icon>
+                </button>
+                <button
+                  type="button"
+                  (click)="generatePassword()"
+                  class="p-1 text-primary-500 hover:text-primary-600 transition-colors focus:outline-none"
+                  title="Generate Secure Password"
+                >
+                  <lucide-icon [img]="icons.Wand2" class="h-5 w-5"></lucide-icon>
+                </button>
+              </div>
             </div>
           </div>
 
@@ -138,7 +168,22 @@ export class RegisterComponent {
   };
 
   isLoading = signal(false);
-  readonly icons = { UserPlus, Mail, Lock, User };
+  showPassword = signal(false);
+  readonly icons = { UserPlus, Mail, Lock, User, Eye, EyeOff, Wand2 };
+
+  togglePasswordVisibility() {
+    this.showPassword.update((value) => !value);
+  }
+
+  generatePassword() {
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()';
+    let password = '';
+    for (let i = 0; i < 12; i++) {
+      password += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+    this.formData.password = password;
+    this.showPassword.set(true); // Show the generated password
+  }
 
   onSubmit() {
     // Basic validation

@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { AuthService, LoginDto } from '../../../core/services/auth.service';
-import { LucideAngularModule, LogIn, Mail, Lock } from 'lucide-angular';
+import { LucideAngularModule, LogIn, Mail, Lock, Eye, EyeOff } from 'lucide-angular';
 
 @Component({
   selector: 'app-login',
@@ -62,12 +62,22 @@ import { LucideAngularModule, LogIn, Mail, Lock } from 'lucide-angular';
               <input
                 id="password"
                 name="password"
-                type="password"
+                [type]="showPassword() ? 'text' : 'password'"
                 [(ngModel)]="formData.password"
                 required
-                class="block w-full pl-10 pr-3 py-3 border border-slate-300 dark:border-slate-700 rounded-xl leading-5 bg-white dark:bg-slate-900 text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 sm:text-sm transition-all shadow-sm"
+                class="block w-full pl-10 pr-10 py-3 border border-slate-300 dark:border-slate-700 rounded-xl leading-5 bg-white dark:bg-slate-900 text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 sm:text-sm transition-all shadow-sm"
                 placeholder="Password"
               />
+              <button
+                type="button"
+                (click)="togglePasswordVisibility()"
+                class="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 transition-colors focus:outline-none"
+              >
+                <lucide-icon
+                  [img]="showPassword() ? icons.EyeOff : icons.Eye"
+                  class="h-5 w-5"
+                ></lucide-icon>
+              </button>
             </div>
           </div>
 
@@ -124,7 +134,12 @@ export class LoginComponent {
   };
 
   isLoading = signal(false);
-  readonly icons = { LogIn, Mail, Lock };
+  showPassword = signal(false);
+  readonly icons = { LogIn, Mail, Lock, Eye, EyeOff };
+
+  togglePasswordVisibility() {
+    this.showPassword.update((value) => !value);
+  }
 
   onSubmit() {
     if (!this.formData.email || !this.formData.password) return;
@@ -137,7 +152,8 @@ export class LoginComponent {
       },
       error: (err) => {
         console.error('Login failed', err);
-        alert('Login failed: ' + (err.error?.message || 'Unknown error'));
+        const errorMessage = err.error?.message || err.statusText || 'Unknown error';
+        alert(`Login failed: ${errorMessage} (${err.status})`);
         this.isLoading.set(false);
       },
     });
