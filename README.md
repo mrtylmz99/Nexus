@@ -71,6 +71,18 @@ _(As seen in header)_
     npm start
     ```
 
+## 🧪 Testing
+
+To run the unit tests:
+
+```bash
+dotnet test
+```
+
+## 📝 Logging
+
+All application logs and errors are automatically saved to the `AppLogs` table in the database.
+
 ## 📄 License
 
 This project is licensed under the MIT License.
