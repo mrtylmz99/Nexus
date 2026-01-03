@@ -22,4 +22,6 @@ dist/
 .idea/
 *.swp
 *.log
+build_log.txt
+*.txt
 .gemini/
