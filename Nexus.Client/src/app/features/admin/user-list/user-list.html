@@ -1,0 +1,99 @@
+<div class="p-6">
+  <div class="flex justify-between items-center mb-6">
+    <h1 class="text-2xl font-bold text-slate-800 dark:text-white">
+      {{ 'ADMIN.USER_LIST' | translate }}
+    </h1>
+    <!-- Search / Actions could go here -->
+  </div>
+
+  <div
+    class="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden"
+  >
+    <!-- Loading State -->
+    <div *ngIf="isLoading()" class="p-8 text-center text-slate-500">Yükleniyor...</div>
+
+    <!-- Data Table -->
+    <div *ngIf="!isLoading()" class="overflow-x-auto">
+      <table class="w-full text-left text-sm text-slate-600 dark:text-slate-300">
+        <thead
+          class="bg-slate-50 dark:bg-slate-900/50 text-xs uppercase font-semibold text-slate-500"
+        >
+          <tr>
+            <th class="px-6 py-4">Kullanıcı</th>
+            <th class="px-6 py-4">{{ 'ADMIN.ROLE' | translate }}</th>
+            <th class="px-6 py-4">{{ 'ADMIN.STATUS' | translate }}</th>
+            <th class="px-6 py-4 text-right">{{ 'ADMIN.ACTIONS' | translate }}</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-slate-200 dark:divide-slate-700">
+          <tr
+            *ngFor="let user of users()"
+            class="hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors"
+          >
+            <!-- User Info -->
+            <td class="px-6 py-4 flex items-center gap-3">
+              <img
+                [src]="user.profilePictureUrl"
+                alt="Avatar"
+                class="w-10 h-10 rounded-full bg-slate-200 object-cover"
+              />
+              <div>
+                <div class="font-medium text-slate-900 dark:text-white">{{ user.fullName }}</div>
+                <div class="text-xs text-slate-500">{{ user.email }}</div>
+              </div>
+            </td>
+
+            <!-- Role -->
+            <td class="px-6 py-4">
+              <span
+                class="px-2.5 py-0.5 rounded-full text-xs font-medium border"
+                [ngClass]="{
+                  'bg-indigo-50 text-indigo-700 border-indigo-200': user.role === 'Admin',
+                  'bg-emerald-50 text-emerald-700 border-emerald-200': user.role === 'Manager',
+                  'bg-slate-50 text-slate-600 border-slate-200': user.role === 'User'
+                }"
+              >
+                {{ user.role }}
+              </span>
+            </td>
+
+            <!-- Status -->
+            <td class="px-6 py-4">
+              <div class="flex items-center gap-2">
+                <div
+                  class="w-2 h-2 rounded-full"
+                  [ngClass]="user.isActive ? 'bg-emerald-500' : 'bg-red-500'"
+                ></div>
+                <span>{{ (user.isActive ? 'ADMIN.ACTIVE' : 'ADMIN.PASSIVE') | translate }}</span>
+              </div>
+            </td>
+
+            <!-- Actions -->
+            <td class="px-6 py-4 text-right">
+              <button
+                (click)="toggleStatus(user)"
+                class="inline-flex items-center justify-center p-2 rounded-lg transition-colors"
+                [ngClass]="
+                  user.isActive
+                    ? 'text-red-500 hover:bg-red-50'
+                    : 'text-emerald-500 hover:bg-emerald-50'
+                "
+                [title]="(user.isActive ? 'ADMIN.BAN_USER' : 'ADMIN.UNBAN_USER') | translate"
+              >
+                <lucide-icon
+                  [name]="user.isActive ? icons.Ban : icons.CheckCircle"
+                  [size]="18"
+                ></lucide-icon>
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- Empty State -->
+      <div *ngIf="users().length === 0" class="p-12 text-center">
+        <p class="text-slate-500">Kayıtlı kullanıcı bulunamadı.</p>
+      </div>
+    </div>
+  </div>
+</div>
