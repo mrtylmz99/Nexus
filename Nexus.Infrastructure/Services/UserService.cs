@@ -1,7 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Nexus.Application.DTOs.User;
 using Nexus.Application.Interfaces;
-using Nexus.Domain.Entities;
 using Nexus.Infrastructure.Persistence;
 
 namespace Nexus.Infrastructure.Services;
@@ -15,25 +14,27 @@ public class UserService : IUserService
         _context = context;
     }
 
-    public async Task<List<UserDto>> GetAllUsersAsync()
+    public async Task<IEnumerable<UserDto>> GetAllUsersAsync()
     {
-        return await _context.Set<User>()
-            .AsNoTracking()
+        return await _context.Users
             .Select(u => new UserDto
             {
                 Id = u.Id,
                 Username = u.Username,
                 Email = u.Email,
                 FullName = u.FullName,
+                Role = u.Role.ToString(),
+                ProfilePictureUrl = u.ProfilePictureUrl,
+                IsActive = u.IsActive,
                 CreatedAt = u.CreatedAt
             })
             .ToListAsync();
     }
 
-    public async Task<UserDto?> GetUserByIdAsync(int id)
+    public async Task<UserDto> GetUserByIdAsync(int id)
     {
-        var user = await _context.Set<User>().FindAsync(id);
-        if (user == null) return null;
+        var user = await _context.Users.FindAsync(id);
+        if (user == null) throw new Exception("User not found");
 
         return new UserDto
         {
@@ -41,30 +42,20 @@ public class UserService : IUserService
             Username = user.Username,
             Email = user.Email,
             FullName = user.FullName,
+            Role = user.Role.ToString(),
+            ProfilePictureUrl = user.ProfilePictureUrl,
+            IsActive = user.IsActive,
             CreatedAt = user.CreatedAt
         };
     }
 
-    public async Task<UserDto> CreateUserAsync(CreateUserDto userDto)
+    public async Task<bool> ToggleUserStatusAsync(int id)
     {
-        var user = new User
-        {
-            Username = userDto.Username,
-            Email = userDto.Email,
-            FullName = userDto.FullName,
-            CreatedAt = DateTime.UtcNow
-        };
+        var user = await _context.Users.FindAsync(id);
+        if (user == null) return false;
 
-        _context.Add(user);
+        user.IsActive = !user.IsActive;
         await _context.SaveChangesAsync();
-
-        return new UserDto
-        {
-            Id = user.Id,
-            Username = user.Username,
-            Email = user.Email,
-            FullName = user.FullName,
-            CreatedAt = user.CreatedAt
-        };
+        return true;
     }
 }

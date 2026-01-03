@@ -4,7 +4,7 @@ namespace Nexus.Application.Interfaces;
 
 public interface IUserService
 {
-    Task<List<UserDto>> GetAllUsersAsync();
-    Task<UserDto?> GetUserByIdAsync(int id);
-    Task<UserDto> CreateUserAsync(CreateUserDto userDto);
+    Task<IEnumerable<UserDto>> GetAllUsersAsync();
+    Task<UserDto> GetUserByIdAsync(int id);
+    Task<bool> ToggleUserStatusAsync(int id); // Ban/Activate
 }
