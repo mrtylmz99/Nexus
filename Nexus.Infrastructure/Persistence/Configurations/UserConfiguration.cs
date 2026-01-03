@@ -33,6 +33,9 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
         builder.Property(u => u.Role)
             .IsRequired();
 
+        builder.Property(u => u.IsActive)
+            .IsRequired();
+
         // Tasks relationship
         builder.HasMany(u => u.AssignedTasks)
             .WithOne(t => t.Assignee)

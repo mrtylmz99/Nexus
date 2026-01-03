@@ -17,6 +17,8 @@ public class User : BaseEntity
 
     public string? ProfilePictureUrl { get; set; }
 
+    public bool IsActive { get; set; } = true;
+
     // Navigation property for assigned tasks
     public ICollection<TaskItem> AssignedTasks { get; set; } = new List<TaskItem>();
 }
