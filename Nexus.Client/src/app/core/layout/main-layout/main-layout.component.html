@@ -44,6 +44,7 @@
         title="Toggle Theme"
         aria-label="Toggle Theme"
       >
+        <span class="sr-only">Toggle Theme</span>
         <lucide-icon [name]="isDarkMode() ? icons.Sun : icons.Moon" [size]="20"></lucide-icon>
       </button>
 
@@ -67,6 +68,7 @@
           class="ml-2 text-red-500 hover:bg-red-50 p-2 rounded-lg"
           title="Logout"
         >
+          <span class="sr-only">Logout</span>
           <lucide-icon [name]="icons.LogOut" [size]="18"></lucide-icon>
         </button>
       </div>

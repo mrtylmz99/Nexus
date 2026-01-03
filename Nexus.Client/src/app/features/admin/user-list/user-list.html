@@ -83,6 +83,9 @@
                   (user.isActive ? 'ADMIN.BAN_USER' : 'ADMIN.UNBAN_USER') | translate
                 "
               >
+                <span class="sr-only">{{
+                  (user.isActive ? 'ADMIN.BAN_USER' : 'ADMIN.UNBAN_USER') | translate
+                }}</span>
                 <lucide-icon
                   [name]="user.isActive ? icons.Ban : icons.CheckCircle"
                   [size]="18"
