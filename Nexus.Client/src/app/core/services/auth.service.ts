@@ -23,6 +23,9 @@ export interface AuthResponse {
     username: string;
     email: string;
     fullName: string;
+    role: string;
+    profilePictureUrl?: string; // Nullable
+    isActive: boolean;
   };
 }
 
