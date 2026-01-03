@@ -1,0 +1,38 @@
+{
+  "COMMON": {
+    "WELCOME": "Welcome to Nexus",
+    "LOGIN": "Login",
+    "REGISTER": "Register",
+    "LOGOUT": "Logout",
+    "DASHBOARD": "Dashboard",
+    "PROJECTS": "Projects",
+    "TASKS": "Tasks",
+    "PROFILE": "Profile",
+    "SETTINGS": "Settings"
+  },
+  "AUTH": {
+    "EMAIL": "Email",
+    "PASSWORD": "Password",
+    "FULL_NAME": "Full Name",
+    "USERNAME": "Username",
+    "SHOW_PASSWORD": "Show Password",
+    "HIDE_PASSWORD": "Hide Password",
+    "GENERATE_PASSWORD": "Generate Password",
+    "LOGIN_SUCCESS": "Login successful! Redirecting...",
+    "REGISTER_SUCCESS": "Registration successful! Welcome aboard.",
+    "LOGIN_FAILED": "Login failed. Please check your credentials.",
+    "REQUIRED_ERROR": "{0} is required."
+  },
+  "ADMIN": {
+    "TITLE": "Admin Panel",
+    "USERS": "Users",
+    "USER_LIST": "User List",
+    "BAN_USER": "Ban User",
+    "UNBAN_USER": "Unban User",
+    "STATUS": "Status",
+    "ACTIVE": "Active",
+    "PASSIVE": "Passive",
+    "ROLE": "Role",
+    "ACTIONS": "Actions"
+  }
+}

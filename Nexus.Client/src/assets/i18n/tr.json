@@ -1,0 +1,38 @@
+{
+  "COMMON": {
+    "WELCOME": "Nexus'a Hoşgeldiniz",
+    "LOGIN": "Giriş Yap",
+    "REGISTER": "Kayıt Ol",
+    "LOGOUT": "Çıkış Yap",
+    "DASHBOARD": "Panel",
+    "PROJECTS": "Projeler",
+    "TASKS": "Görevler",
+    "PROFILE": "Profil",
+    "SETTINGS": "Ayarlar"
+  },
+  "AUTH": {
+    "EMAIL": "E-posta",
+    "PASSWORD": "Şifre",
+    "FULL_NAME": "Ad Soyad",
+    "USERNAME": "Kullanıcı Adı",
+    "SHOW_PASSWORD": "Şifreyi Göster",
+    "HIDE_PASSWORD": "Şifreyi Gizle",
+    "GENERATE_PASSWORD": "Şifre Oluştur",
+    "LOGIN_SUCCESS": "Giriş başarılı! Yönlendiriliyorsunuz...",
+    "REGISTER_SUCCESS": "Kayıt başarılı! Aramıza hoşgeldiniz.",
+    "LOGIN_FAILED": "Giriş başarısız. Lütfen bilgilerinizi kontrol edin.",
+    "REQUIRED_ERROR": "{0} gereklidir."
+  },
+  "ADMIN": {
+    "TITLE": "Yönetici Paneli",
+    "USERS": "Kullanıcılar",
+    "USER_LIST": "Kullanıcı Listesi",
+    "BAN_USER": "Kullanıcıyı Yasakla",
+    "UNBAN_USER": "Yasağı Kaldır",
+    "STATUS": "Durum",
+    "ACTIVE": "Aktif",
+    "PASSIVE": "Pasif",
+    "ROLE": "Rol",
+    "ACTIONS": "İşlemler"
+  }
+}
