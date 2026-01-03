@@ -24,9 +24,15 @@ export class ThemeService {
       if (isDark) {
         document.documentElement.classList.add('dark');
         localStorage.setItem('theme', 'dark');
+        // Update Favicon: Dark Screen -> White Icon (favicon-light)
+        const favicon = document.getElementById('app-favicon') as HTMLLinkElement;
+        if (favicon) favicon.href = 'favicon-light.svg';
       } else {
         document.documentElement.classList.remove('dark');
         localStorage.setItem('theme', 'light');
+        // Update Favicon: Light Screen -> Black Icon (favicon-dark)
+        const favicon = document.getElementById('app-favicon') as HTMLLinkElement;
+        if (favicon) favicon.href = 'favicon-dark.svg';
       }
     });
   }

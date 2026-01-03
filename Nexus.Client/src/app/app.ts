@@ -1,5 +1,5 @@
 import { Component, inject } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { RouterOutlet, RouterLink } from '@angular/router';
 import { LucideAngularModule, Sun, Moon, Zap, Layers, FolderGit2 } from 'lucide-angular';
 import { ThemeService } from './core/services/theme.service';
 import { CommonModule } from '@angular/common';
@@ -7,7 +7,7 @@ import { CommonModule } from '@angular/common';
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, LucideAngularModule, CommonModule],
+  imports: [RouterOutlet, RouterLink, LucideAngularModule, CommonModule],
   templateUrl: './app.html',
   styleUrl: './app.css',
 })
