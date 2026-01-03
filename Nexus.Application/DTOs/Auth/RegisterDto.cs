@@ -1,9 +1,8 @@
 using System.ComponentModel.DataAnnotations;
-using Nexus.Domain.Common;
 
-namespace Nexus.Domain.Entities;
+namespace Nexus.Application.DTOs.Auth;
 
-public class User : BaseEntity
+public class RegisterDto
 {
     [Required]
     [MaxLength(50)]
@@ -19,8 +18,6 @@ public class User : BaseEntity
     public string FullName { get; set; } = string.Empty;
 
     [Required]
-    public string PasswordHash { get; set; } = string.Empty;
-
-    // Navigation property for assigned tasks
-    public ICollection<TaskItem> AssignedTasks { get; set; } = new List<TaskItem>();
+    [MinLength(6)]
+    public string Password { get; set; } = string.Empty;
 }

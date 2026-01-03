@@ -10,75 +10,92 @@ public static class DbInitializer
     {
         context.Database.EnsureCreated();
 
-        // Look for any projects.
-        if (context.Projects.Any())
+        // Look for any users. If exist, DB is already seeded.
+        // Kullanıcı var mı diye bak. Varsa, veritabanı zaten tohumlanmıştır.
+        if (context.Users.Any())
         {
-            return;   // DB has been seeded
+            return;
         }
 
-        var projects = new Project[]
-        {
-            new Project
-            {
-                Name = "Website Redesign",
-                Description = "Redesigning the corporate website with new branding.",
-                Status = 0, // Active
-                CreatedAt = DateTime.UtcNow
-            },
-            new Project
-            {
-                Name = "Mobile App Beta",
-                Description = "Launch the beta version of the iOS app.",
-                Status = 0, // Active
-                CreatedAt = DateTime.UtcNow
-            }
-        };
-
-        context.Projects.AddRange(projects);
-        context.SaveChanges();
-
+        // 1. Seed Users (with Hashed Passwords) / Kullanıcıları Ekle (Hash'lenmiş şifrelerle)
+        // Note: In a real app, use a service or config for the salt/work factor.
+        // Not: Gerçek bir uygulamada salt/work factor için bir servis veya yapılandırma kullanın.
         var users = new User[]
         {
-            new User { Username = "jdoe", FullName = "John Doe", Email = "john@nexus.com", CreatedAt = DateTime.UtcNow },
-            new User { Username = "asmith", FullName = "Alice Smith", Email = "alice@nexus.com", CreatedAt = DateTime.UtcNow }
+            new User 
+            { 
+                Username = "jdoe", 
+                FullName = "John Doe", 
+                Email = "john@nexus.com", 
+                PasswordHash = BCrypt.Net.BCrypt.HashPassword("Password123!"),
+                CreatedAt = DateTime.UtcNow 
+            },
+            new User 
+            { 
+                Username = "asmith", 
+                FullName = "Alice Smith", 
+                Email = "alice@nexus.com", 
+                PasswordHash = BCrypt.Net.BCrypt.HashPassword("Password123!"),
+                CreatedAt = DateTime.UtcNow 
+            }
         };
         context.Users.AddRange(users);
         context.SaveChanges();
 
+        // 2. Seed Categories
         var categories = new Category[]
         {
-            new Category { Name = "Frontend", ColorCode = "#3B82F6" },
-            new Category { Name = "Backend", ColorCode = "#10B981" },
-            new Category { Name = "Bug", ColorCode = "#EF4444" }
+            new Category { Name = "Frontend", ColorCode = "#3B82F6", CreatedAt = DateTime.UtcNow },
+            new Category { Name = "Backend", ColorCode = "#10B981", CreatedAt = DateTime.UtcNow },
+            new Category { Name = "Bug", ColorCode = "#EF4444", CreatedAt = DateTime.UtcNow }
         };
         context.Categories.AddRange(categories);
         context.SaveChanges();
 
+        // 3. Seed Projects
+        var projects = new Project[]
+        {
+            new Project { Name = "Project Alpha", Description = "The first project", Status = 0, CreatedAt = DateTime.UtcNow },
+            new Project { Name = "Project Beta", Description = "Second project", Status = 0, CreatedAt = DateTime.UtcNow }
+        };
+        context.Projects.AddRange(projects);
+        context.SaveChanges();
+
+        // 4. Seed Tasks
         var tasks = new TaskItem[]
         {
-            new TaskItem
-            {
-                Title = "Design Mockups",
-                Description = "Create Figma mockups for the homepage.",
-                Priority = TaskPriority.High,
-                Status = TaskStatus.InProgress,
+            new TaskItem 
+            { 
+                Title = "Initial Setup", 
+                Description = "Setup the project structure", 
+                Priority = TaskPriority.High, 
+                Status = TaskStatus.Completed, 
                 ProjectId = projects[0].Id,
-                AssigneeId = users[1].Id, // Assign to Alice
+                AssigneeId = users[0].Id,
                 CreatedAt = DateTime.UtcNow,
-                DueDate = DateTime.UtcNow.AddDays(7),
-                Categories = new List<Category> { categories[0] }
+                Categories = new List<Category> { categories[1] } 
             },
-            new TaskItem
-            {
-                Title = "Setup DevOps Pipeline",
-                Description = "Configure CI/CD actions.",
-                Priority = TaskPriority.Medium,
-                Status = TaskStatus.Todo,
-                ProjectId = projects[1].Id,
-                AssigneeId = users[0].Id, // Assign to John
+            new TaskItem 
+            { 
+                Title = "Database Design", 
+                Description = "Design the schema", 
+                Priority = TaskPriority.Medium, 
+                Status = TaskStatus.InProgress, 
+                ProjectId = projects[0].Id,
+                AssigneeId = users[1].Id,
                 CreatedAt = DateTime.UtcNow,
-                DueDate = DateTime.UtcNow.AddDays(3),
                 Categories = new List<Category> { categories[1] }
+            },
+            new TaskItem 
+            { 
+                Title = "Frontend Init", 
+                Description = "Initialize Angular", 
+                Priority = TaskPriority.Low, 
+                Status = TaskStatus.Todo, 
+                ProjectId = projects[1].Id,
+                AssigneeId = users[0].Id,
+                CreatedAt = DateTime.UtcNow,
+                Categories = new List<Category> { categories[0] }
             }
         };
 
