@@ -73,14 +73,14 @@ if (app.Environment.IsDevelopment())
     {
         options.WithTitle("Nexus API")
                .WithTheme(ScalarTheme.DeepSpace)
-               .WithDefaultHttpClient(ScalarTarget.CSharp, ScalarClient.HttpClient)
+               .WithDefaultHttpClient(ScalarTarget.CSharp, ScalarClient.HttpClient);
             // Add HTTP Bearer Authentication (JWT) support to Scalar UI
             // Scalar UI için HTTP Bearer (JWT) Kimlik Doğrulama desteği
-               .WithPreferredScheme("Bearer") 
-               .WithHttpBearerAuthentication(bearer =>
-               {
-                   bearer.Token = "your-jwt-token-here";
-               });
+               //.WithPreferredScheme("Bearer") 
+               //.WithHttpBearerAuthentication(bearer =>
+               //{
+               //    bearer.Token = "your-jwt-token-here";
+               //});
     });
 }
 
