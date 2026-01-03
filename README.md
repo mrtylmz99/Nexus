@@ -2,6 +2,19 @@
 
 **Project Nexus** is a state-of-the-art Project Management SaaS application built to empower high-performance teams. It combines robust backend security with a premium, glassmorphism-inspired frontend design.
 
+## 🇹🇷 Proje Hakkında (TR)
+
+**Nexus**, yüksek performanslı ekipler için tasarlanmış modern bir Proje Yönetim ve İşbirliği platformudur. .NET 9 ve Angular 19 gücüyle oluşturulan bu sistem, güvenli altyapısı ve Glassmorphism tasarım diliyle hem estetik hem de güçlü bir deneyim sunar.
+
+**Temel Özellikler:**
+
+- **Modern Teknoloji:** .NET 9 API ve Angular 19 (Signals) mimarisi.
+- **Güvenlik:** JWT tabanlı kimlik doğrulama, Rol Yönetimi (Admin/User) ve güvenli veri saklama.
+- **Arayüz:** Tailwind CSS ile tasarlanmış, karanlık mod destekli premium arayüz.
+- **Mimari:** Clean Architecture prensiplerine tam uyum.
+
+---
+
 ![Dashboard Preview](Nexus.Client/src/assets/images/dashboard-preview.png)
 
 ## 🌟 Key Features
@@ -52,8 +65,8 @@ _(As seen in header)_
 1.  **Clone the repo**
 
     ```bash
-    git clone https://github.com/mrtylmz99/CalendarApp.git
-    cd CalendarApp
+    git clone https://github.com/mrtylmz99/Nexus.git
+    cd Nexus
     ```
 
 2.  **Backend Setup**
