@@ -35,7 +35,7 @@ export interface AuthResponse {
 export class AuthService {
   private http = inject(HttpClient);
   private router = inject(Router);
-  private apiUrl = 'https://localhost:7111/api/auth'; // Adjust port if needed
+  private apiUrl = 'http://localhost:5093/api/auth'; // Using HTTP to avoid SSL issues
 
   // State
   currentUser = signal<AuthResponse['user'] | null>(this.getUserFromStorage());
@@ -51,6 +51,20 @@ export class AuthService {
     return this.http
       .post<AuthResponse>(`${this.apiUrl}/register`, data)
       .pipe(tap((response) => this.handleAuthSuccess(response)));
+  }
+
+  forgotPassword(email: string): Observable<any> {
+    return this.http.post(`${this.apiUrl}/forgot-password`, `"${email}"`, {
+      headers: { 'Content-Type': 'application/json' },
+    });
+  }
+
+  verifyCode(email: string, code: string): Observable<any> {
+    return this.http.post(`${this.apiUrl}/verify-code`, { email, code });
+  }
+
+  resetPassword(email: string, code: string, newPassword: string): Observable<any> {
+    return this.http.post(`${this.apiUrl}/reset-password`, { email, code, newPassword });
   }
 
   logout() {

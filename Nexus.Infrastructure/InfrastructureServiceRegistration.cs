@@ -18,6 +18,7 @@ public static class InfrastructureServiceRegistration
         services.AddScoped<IUserService, UserService>();
         services.AddScoped<ICategoryService, CategoryService>();
         services.AddScoped<ICommentService, CommentService>();
+        services.AddScoped<IEmailService, EmailService>();
         services.AddScoped<IAuthService, AuthService>();
 
         return services;

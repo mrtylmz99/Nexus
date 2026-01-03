@@ -5,7 +5,6 @@ import { RouterLink, Router } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
 import { AuthService, RegisterDto } from '../../../core/services/auth.service';
 import { ToastrService } from 'ngx-toastr';
-import { TranslateService, TranslateModule } from '@ngx-translate/core';
 import {
   LucideAngularModule,
   UserPlus,
@@ -20,7 +19,7 @@ import {
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink, LucideAngularModule, TranslateModule],
+  imports: [CommonModule, FormsModule, RouterLink, LucideAngularModule],
   template: `
     <div class="min-h-[80vh] flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
       <div
@@ -164,7 +163,6 @@ export class RegisterComponent {
   authService = inject(AuthService);
   private toastr = inject(ToastrService);
   private router = inject(Router);
-  private translate = inject(TranslateService);
 
   formData: RegisterDto = {
     username: '',
@@ -203,12 +201,12 @@ export class RegisterComponent {
       !this.formData.email ||
       !this.formData.password
     ) {
-      this.toastr.warning(this.translate.instant('AUTH.VALIDATION_ALL_FIELDS'), 'Validation Error');
+      this.toastr.warning('Lütfen tüm alanları doldurun.', 'Eksik Bilgi');
       return;
     }
 
     if (!this.isValidEmail(this.formData.email)) {
-      this.toastr.warning(this.translate.instant('AUTH.VALIDATION_EMAIL'), 'Invalid Email');
+      this.toastr.warning('Lütfen geçerli bir e-posta adresi girin.', 'Geçersiz E-posta');
       return;
     }
 
@@ -216,8 +214,19 @@ export class RegisterComponent {
     this.authService.register(this.formData).subscribe({
       next: () => {
         this.isLoading.set(false);
-        this.toastr.success(this.translate.instant('AUTH.REGISTER_SUCCESS'), 'Success');
+        this.toastr.success('Kayıt başarılı! Lütfen giriş yapın.', 'Başarılı');
         this.router.navigate(['/login']);
+      },
+      error: (err) => {
+        this.isLoading.set(false);
+        console.error('Registration failed', err);
+        const errorMessage = err.error?.message || 'Bilinmeyen bir hata oluştu';
+
+        if (errorMessage === 'Email already exists') {
+          this.toastr.warning('Bu mail adresi ile zaten bir üyelik mevcut.', 'Kayıt Mevcut');
+        } else {
+          this.toastr.error('Kayıt işlemi başarısız: ' + errorMessage, 'Hata');
+        }
       },
     });
   }

@@ -10,8 +10,8 @@ import { ToastrModule } from 'ngx-toastr';
 import { routes } from './app.routes';
 
 // AoT requires an exported function for factories
-export function HttpLoaderFactory() {
-  return new TranslateHttpLoader();
+export function HttpLoaderFactory(http: HttpClient) {
+  return new (TranslateHttpLoader as any)(http);
 }
 
 export const appConfig: ApplicationConfig = {
@@ -25,6 +25,7 @@ export const appConfig: ApplicationConfig = {
         loader: {
           provide: TranslateLoader,
           useFactory: HttpLoaderFactory,
+          deps: [HttpClient],
         },
         defaultLanguage: 'tr', // Default to Turkish as requested
       }),

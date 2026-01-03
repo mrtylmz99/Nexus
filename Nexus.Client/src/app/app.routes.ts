@@ -11,6 +11,13 @@ export const routes: Routes = [
   // Public Routes (Auth)
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
+  {
+    path: 'forgot-password',
+    loadComponent: () =>
+      import('./features/auth/forgot-password/forgot-password.component').then(
+        (m) => m.ForgotPasswordComponent
+      ),
+  },
 
   // Admin Routes (Admin Layout)
   {
