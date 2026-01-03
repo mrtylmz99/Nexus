@@ -24,10 +24,20 @@ public static class DbInitializer
         {
             new User 
             { 
+                Username = "admin", 
+                FullName = "System Administrator", 
+                Email = "admin@nexus.com", 
+                PasswordHash = BCrypt.Net.BCrypt.HashPassword("Admin123!"),
+                Role = UserRole.Admin,
+                CreatedAt = DateTime.UtcNow 
+            },
+            new User 
+            { 
                 Username = "jdoe", 
                 FullName = "John Doe", 
                 Email = "john@nexus.com", 
                 PasswordHash = BCrypt.Net.BCrypt.HashPassword("Password123!"),
+                Role = UserRole.User,
                 CreatedAt = DateTime.UtcNow 
             },
             new User 
@@ -36,6 +46,7 @@ public static class DbInitializer
                 FullName = "Alice Smith", 
                 Email = "alice@nexus.com", 
                 PasswordHash = BCrypt.Net.BCrypt.HashPassword("Password123!"),
+                Role = UserRole.Manager,
                 CreatedAt = DateTime.UtcNow 
             }
         };

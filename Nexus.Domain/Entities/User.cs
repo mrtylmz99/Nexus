@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using Nexus.Domain.Common;
+using Nexus.Domain.Enums;
 
 namespace Nexus.Domain.Entities;
 
@@ -20,6 +21,8 @@ public class User : BaseEntity
 
     [Required]
     public string PasswordHash { get; set; } = string.Empty;
+
+    public UserRole Role { get; set; } = UserRole.User;
 
     // Navigation property for assigned tasks
     public ICollection<TaskItem> AssignedTasks { get; set; } = new List<TaskItem>();
