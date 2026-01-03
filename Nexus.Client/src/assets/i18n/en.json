@@ -21,7 +21,9 @@
     "LOGIN_SUCCESS": "Login successful! Redirecting...",
     "REGISTER_SUCCESS": "Registration successful! Welcome aboard.",
     "LOGIN_FAILED": "Login failed. Please check your credentials.",
-    "REQUIRED_ERROR": "{0} is required."
+    "REQUIRED_ERROR": "{0} is required.",
+    "VALIDATION_ALL_FIELDS": "Please fill in all required fields.",
+    "VALIDATION_EMAIL": "Please enter a valid email address."
   },
   "ADMIN": {
     "TITLE": "Admin Panel",

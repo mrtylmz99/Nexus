@@ -11,8 +11,8 @@ import { routes } from './app.routes';
 
 // AoT requires an exported function for factories
 // AoT requires an exported function for factories
-export function HttpLoaderFactory() {
-  return new TranslateHttpLoader();
+export function HttpLoaderFactory(http: HttpClient) {
+  return new TranslateHttpLoader(http as any);
 }
 
 export const appConfig: ApplicationConfig = {

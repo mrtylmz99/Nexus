@@ -21,7 +21,9 @@
     "LOGIN_SUCCESS": "Giriş başarılı! Yönlendiriliyorsunuz...",
     "REGISTER_SUCCESS": "Kayıt başarılı! Aramıza hoşgeldiniz.",
     "LOGIN_FAILED": "Giriş başarısız. Lütfen bilgilerinizi kontrol edin.",
-    "REQUIRED_ERROR": "{0} gereklidir."
+    "REQUIRED_ERROR": "{0} gereklidir.",
+    "VALIDATION_ALL_FIELDS": "Lütfen tüm zorunlu alanları doldurunuz.",
+    "VALIDATION_EMAIL": "Lütfen geçerli bir e-posta adresi giriniz."
   },
   "ADMIN": {
     "TITLE": "Yönetici Paneli",

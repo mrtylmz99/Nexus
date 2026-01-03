@@ -1,8 +1,11 @@
 import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { RouterLink } from '@angular/router';
+import { RouterLink, Router } from '@angular/router';
+import { HttpErrorResponse } from '@angular/common/http';
 import { AuthService, RegisterDto } from '../../../core/services/auth.service';
+import { ToastrService } from 'ngx-toastr';
+import { TranslateService, TranslateModule } from '@ngx-translate/core';
 import {
   LucideAngularModule,
   UserPlus,
@@ -17,7 +20,7 @@ import {
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink, LucideAngularModule],
+  imports: [CommonModule, FormsModule, RouterLink, LucideAngularModule, TranslateModule],
   template: `
     <div class="min-h-[80vh] flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
       <div
@@ -159,6 +162,9 @@ import {
 })
 export class RegisterComponent {
   authService = inject(AuthService);
+  private toastr = inject(ToastrService);
+  private router = inject(Router);
+  private translate = inject(TranslateService);
 
   formData: RegisterDto = {
     username: '',
@@ -185,19 +191,33 @@ export class RegisterComponent {
     this.showPassword.set(true); // Show the generated password
   }
 
+  isValidEmail(email: string): boolean {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  }
+
   onSubmit() {
-    // Basic validation
-    if (!this.formData.email || !this.formData.password || !this.formData.username) return;
+    if (
+      !this.formData.fullName ||
+      !this.formData.username ||
+      !this.formData.email ||
+      !this.formData.password
+    ) {
+      this.toastr.warning(this.translate.instant('AUTH.VALIDATION_ALL_FIELDS'), 'Validation Error');
+      return;
+    }
+
+    if (!this.isValidEmail(this.formData.email)) {
+      this.toastr.warning(this.translate.instant('AUTH.VALIDATION_EMAIL'), 'Invalid Email');
+      return;
+    }
 
     this.isLoading.set(true);
     this.authService.register(this.formData).subscribe({
       next: () => {
         this.isLoading.set(false);
-      },
-      error: (err) => {
-        console.error('Registration failed', err);
-        alert('Registration failed: ' + (err.error?.message || 'Unknown error'));
-        this.isLoading.set(false);
+        this.toastr.success(this.translate.instant('AUTH.REGISTER_SUCCESS'), 'Success');
+        this.router.navigate(['/login']);
       },
     });
   }
