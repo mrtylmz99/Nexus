@@ -2,11 +2,11 @@
 bin/
 obj/
 .vs/
+*.pubxml
+
+# User Specific
 *.user
 *.suo
-[Dd]ebug/
-[Rr]elease/
-*.pubxml
 
 # Dependency directories
 packages/
