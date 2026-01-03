@@ -41,6 +41,8 @@
       <button
         (click)="toggleTheme()"
         class="p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-500 dark:text-slate-400"
+        title="Toggle Theme"
+        aria-label="Toggle Theme"
       >
         <lucide-icon [name]="isDarkMode() ? icons.Sun : icons.Moon" [size]="20"></lucide-icon>
       </button>
@@ -57,6 +59,7 @@
         </div>
         <img
           [src]="user()?.profilePictureUrl"
+          alt="User Profile Picture"
           class="w-9 h-9 rounded-full bg-slate-200 border-2 border-white dark:border-slate-800"
         />
         <button

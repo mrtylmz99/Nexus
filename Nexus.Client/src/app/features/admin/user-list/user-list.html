@@ -79,6 +79,9 @@
                     : 'text-emerald-500 hover:bg-emerald-50'
                 "
                 [title]="(user.isActive ? 'ADMIN.BAN_USER' : 'ADMIN.UNBAN_USER') | translate"
+                [attr.aria-label]="
+                  (user.isActive ? 'ADMIN.BAN_USER' : 'ADMIN.UNBAN_USER') | translate
+                "
               >
                 <lucide-icon
                   [name]="user.isActive ? icons.Ban : icons.CheckCircle"
