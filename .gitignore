@@ -18,13 +18,19 @@ dist/
 .env
 
 # Log files
+# Build and Run Logs
 *.log
+*.txt
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 build.out
-build_log.txt
 msbuild.log
+build_errors.txt
+build_log.txt
 err.txt
-build_error.log
+last_try.txt
+backend_build_log.txt
+!LICENSE.txt
 .gemini/
+!msbuild.log

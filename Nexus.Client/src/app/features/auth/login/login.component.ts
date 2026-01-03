@@ -3,14 +3,30 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { AuthService, LoginDto } from '../../../core/services/auth.service';
-import { LucideAngularModule, LogIn, Mail, Lock, Eye, EyeOff } from 'lucide-angular';
+import { TranslateService, TranslateModule } from '@ngx-translate/core';
+import { LucideAngularModule, LogIn, Mail, Lock, Eye, EyeOff, Globe } from 'lucide-angular';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink, LucideAngularModule],
+  imports: [CommonModule, FormsModule, RouterLink, LucideAngularModule, TranslateModule],
   template: `
-    <div class="min-h-[80vh] flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+    <div class="min-h-[80vh] flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 relative">
+      <!-- Language Switcher -->
+      <div class="absolute top-4 right-4 flex space-x-2 z-10">
+        <button
+          (click)="switchLanguage('en')"
+          class="px-3 py-1 text-sm bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors"
+        >
+          EN
+        </button>
+        <button
+          (click)="switchLanguage('tr')"
+          class="px-3 py-1 text-sm bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors"
+        >
+          TR
+        </button>
+      </div>
       <div
         class="max-w-md w-full space-y-8 bg-white dark:bg-dark-surface p-8 rounded-2xl shadow-2xl border border-slate-100 dark:border-slate-800 transition-colors duration-300"
       >
@@ -127,6 +143,7 @@ import { LucideAngularModule, LogIn, Mail, Lock, Eye, EyeOff } from 'lucide-angu
 })
 export class LoginComponent {
   authService = inject(AuthService);
+  private translate = inject(TranslateService);
 
   formData: LoginDto = {
     email: '',
@@ -139,6 +156,10 @@ export class LoginComponent {
 
   togglePasswordVisibility() {
     this.showPassword.update((value) => !value);
+  }
+
+  switchLanguage(lang: string) {
+    this.translate.use(lang);
   }
 
   onSubmit() {
