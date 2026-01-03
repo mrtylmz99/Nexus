@@ -10,22 +10,22 @@ import { ToastrModule } from 'ngx-toastr';
 import { routes } from './app.routes';
 
 // AoT requires an exported function for factories
-export function HttpLoaderFactory(http: HttpClient) {
-  return new TranslateHttpLoader(http, './assets/i18n/', '.json');
+// AoT requires an exported function for factories
+export function HttpLoaderFactory() {
+  return new TranslateHttpLoader();
 }
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),
-    provideHttpClient(withInterceptorsFromDi()),
+    provideHttpClient(withInterceptorsFromDi()), // Keep HttpClient provider
     provideAnimations(), // Enable animations
     importProvidersFrom(
       TranslateModule.forRoot({
         loader: {
           provide: TranslateLoader,
           useFactory: HttpLoaderFactory,
-          deps: [HttpClient],
         },
         defaultLanguage: 'tr', // Default to Turkish as requested
       }),
